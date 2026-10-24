@@ -31,6 +31,11 @@ EMBED_CACHE_DIR = "./fastembed_cache"   # model is downloaded once and kept here
 
 CHUNK_SIZE = 1000
 CHUNK_OVERLAP = 200
+MAX_CHUNKS = 500           # safety cap for very large pages (saves memory on Streamlit Cloud)
+
+# Low-memory embedding settings (important on Streamlit Community Cloud)
+EMBED_BATCH_SIZE = 8       # default is 256, which can use a lot of RAM
+EMBED_MAX_LENGTH = 384     # max tokens per chunk (1000 characters is about 250 tokens)
 MAX_HISTORY_MESSAGES = 16  # last 8 turns (8 user + 8 AI messages)
 
 
@@ -41,7 +46,13 @@ def is_rate_limit_error(error):
 
 @st.cache_resource(show_spinner="Loading embedding model (first time downloads it)...")
 def get_embeddings():
-    return FastEmbedEmbeddings(model_name=EMBED_MODEL, cache_dir=EMBED_CACHE_DIR)
+    return FastEmbedEmbeddings(
+        model_name=EMBED_MODEL,
+        cache_dir=EMBED_CACHE_DIR,
+        batch_size=EMBED_BATCH_SIZE,
+        max_length=EMBED_MAX_LENGTH,
+        threads=1,
+    )
 
 
 # -----------------------------
@@ -63,6 +74,10 @@ def get_vector_store_from_url(url):
 
     if not chunks:
         raise ValueError("No readable text found on this page.")
+
+    if len(chunks) > MAX_CHUNKS:
+        st.warning(f"This page is very large. Only the first {MAX_CHUNKS} parts are used.")
+        chunks = chunks[:MAX_CHUNKS]
 
     return FAISS.from_documents(chunks, get_embeddings())
 
