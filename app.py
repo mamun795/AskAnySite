@@ -88,7 +88,7 @@ def get_conversational_rag_chain(vector_store):
 
     prompt = ChatPromptTemplate.from_messages([
         ("system",
-         "You are **AskAnySite AI chatbot**, developed by **Md. Mamun Miah**. "
+         "You are **AskAnySite**, developed by **Md. Mamun Miah**. "
          "He is a 4th-year, 2nd-semester student of the ICT Department at MBSTU. "
          "When asked 'who are you' or 'who developed you', answer only with your name and developer identity in **bold**. "
          "Otherwise, just answer the query normally. "
@@ -149,7 +149,7 @@ if st.session_state.get("current_url") != website_url:
         st.session_state.vector_store = vector_store
         st.session_state.conversation_rag_chain = get_conversational_rag_chain(vector_store)
         st.session_state.chat_History = [
-            AIMessage(content="Hello, I am **M795 AI chatbot**. How can I help you?")
+            AIMessage(content="Hello, I am **AskAnySite**. How can I help you?")
         ]
         st.session_state.current_url = website_url
     except Exception as e:
