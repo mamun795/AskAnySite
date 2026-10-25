@@ -23,20 +23,18 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 # -----------------------------
 CHAT_MODEL = "gemini-2.5-flash"
 
-# Local embedding model (runs on your PC, no API key, no rate limit).
-# English websites : "BAAI/bge-small-en-v1.5"        (~130 MB, fast)
-# Other languages  : "intfloat/multilingual-e5-large" (~2 GB, slower on CPU)
+
 EMBED_MODEL = "BAAI/bge-small-en-v1.5"
-EMBED_CACHE_DIR = "./fastembed_cache"   # model is downloaded once and kept here
+EMBED_CACHE_DIR = "./fastembed_cache"   
 
 CHUNK_SIZE = 1000
 CHUNK_OVERLAP = 200
 MAX_CHUNKS = 500           # safety cap for very large pages (saves memory on Streamlit Cloud)
 
-# Low-memory embedding settings (important on Streamlit Community Cloud)
-EMBED_BATCH_SIZE = 8       # default is 256, which can use a lot of RAM
-EMBED_MAX_LENGTH = 384     # max tokens per chunk (1000 characters is about 250 tokens)
-MAX_HISTORY_MESSAGES = 16  # last 8 turns (8 user + 8 AI messages)
+
+EMBED_BATCH_SIZE = 8       
+EMBED_MAX_LENGTH = 384     
+MAX_HISTORY_MESSAGES = 16  
 
 
 def is_rate_limit_error(error):
@@ -90,7 +88,7 @@ def get_conversational_rag_chain(vector_store):
 
     prompt = ChatPromptTemplate.from_messages([
         ("system",
-         "You are **M795 AI chatbot**, developed by **Mamun Ahmed**. "
+         "You are **M795 AI chatbot**, developed by **Md. Mamun Miah**. "
          "He is a 4th-year, 2nd-semester student of the ICT Department at MBSTU. "
          "When asked 'who are you' or 'who developed you', answer only with your name and developer identity in **bold**. "
          "Otherwise, just answer the query normally. "
